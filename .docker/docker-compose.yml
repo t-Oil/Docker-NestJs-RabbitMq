@@ -1,0 +1,36 @@
+version: "3.2"
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management-alpine"
+    container_name: "rabbit"
+    environment:
+      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_VHOST: 'host'
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+    volumes:
+        - "~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/"
+        - "~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq"
+    networks:
+        - "rabbitmq_go_net"
+    command: ["bash", "-c", "chmod 400 /var/lib/rabbitmq/.erlang.cookie; rabbitmq-server"]
+  mariadb:
+    image: mariadb:10.7
+    container_name: "mariadb"
+    ports:
+      - 3306:3306
+    volumes:
+      - ~/apps/mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=S3cret
+      - MYSQL_PASSWORD=An0thrS3crt
+      - MYSQL_USER=rabbit_user
+      - MYSQL_DATABASE=rabbit_db
+    networks:
+      - "rabbitmq_go_net"
+
+networks:
+  rabbitmq_go_net:
+    driver: bridge
