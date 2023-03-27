@@ -17,7 +17,7 @@ services:
         - "rabbitmq_go_net"
     command: ["bash", "-c", "chmod 400 /var/lib/rabbitmq/.erlang.cookie; rabbitmq-server"]
   mariadb:
-    image: mariadb:10.7
+    image: mariadb:10.8.2
     container_name: "mariadb"
     ports:
       - 3306:3306
